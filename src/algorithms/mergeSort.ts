@@ -12,12 +12,12 @@ const mergeSortInner = async (data: number[], p: number, r: number, render: (dat
     const q = Math.floor((p+r) / 2);
     await mergeSortInner(data, p, q, render);
     await mergeSortInner(data, q + 1, r, render);
-    merge(data, p, q, r, render);
+    await merge(data, p, q, r, render);
   }
   render(data, getColors(data.length));
 }
 
-const merge = (data: number[], p: number, q:number, r: number, render: (data: number[], colors: string[]) => void) => {
+const merge = async (data: number[], p: number, q:number, r: number, render: (data: number[], colors: string[]) => void) => {
   const newData = [];
   const data1 = data.slice(p,q+1);
   const data2 = data.slice(q+1,r+1);
@@ -28,7 +28,18 @@ const merge = (data: number[], p: number, q:number, r: number, render: (data: nu
       else newData.push(data1.shift()!);
     } else if (data1.length > 0) newData.push(data1.shift()!);
     else newData.push(data2.shift()!);
+
+    await createRender(data, newData, p, [p + newData.length - 1], render);
   }
 
   data.splice(p, newData.length, ...newData);
+}
+
+const createRender = async (fullData: number[], newData: number[], start: number, changes: number[], render: (data: number[], colors: string[]) => void) => {
+  await delay(25);
+  var combinedData = [...fullData];
+  combinedData.splice(start, newData.length, ...newData);
+  const colors = getColors(fullData.length);
+  changes.forEach(v => colors[v] = "red");
+  render(combinedData, colors);
 }

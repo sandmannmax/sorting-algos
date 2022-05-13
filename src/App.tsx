@@ -1,4 +1,5 @@
 import React, { useState } from 'react';
+import { bubbleSort } from './algorithms/bubbleSort';
 import { insertSort } from './algorithms/insertSort';
 import { mergeSort } from './algorithms/mergeSort';
 import './App.css';
@@ -47,6 +48,10 @@ function App() {
     mergeSort(arr, render);
   }
 
+  const handleBubbleSortClick = () => {
+    bubbleSort(arr, render);
+  }
+
   return (
     <div className="App">
       <div style={{background:"gray", marginLeft: "auto", marginRight: "auto", padding: "20px", display: "flex", flexDirection: "row", columnGap: "3px", alignItems: "end"}}>
@@ -57,6 +62,7 @@ function App() {
         <button onClick={handleCreateDataClick}>Create Data</button>
         <button onClick={handleInsertSortClick}>Insert Sort</button>
         <button onClick={handleMergeSortClick}>Merge Sort</button>
+        <button onClick={handleBubbleSortClick}>Bubble Sort</button>
       </div>
     </div>
   );
