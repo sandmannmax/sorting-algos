@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import { useEffect, useState } from 'react';
 import { bubbleSort } from './algorithms/bubbleSort';
 import { insertSort } from './algorithms/insertSort';
 import { mergeSort } from './algorithms/mergeSort';
@@ -10,6 +10,11 @@ function App() {
   const [fullCount, setFullCount] = useState(100);
   const [arr, setArr] = useState<number[]>([]);
   const [bars, setBars] = useState<JSX.Element[]>([]);
+  const [running, setRunning] = useState(false);
+
+  useEffect(() => {
+    handleCreateDataClick();
+  }, []);
 
   const shuffle = () => {
     var newArr = [];
@@ -29,27 +34,27 @@ function App() {
     setBars(newBars);
   }
 
-  const handleChange = (ev: React.ChangeEvent<HTMLInputElement>) => {
-    const v = Number.parseInt(ev.target.value);
-    if (!isNaN(v))
-      setFullCount(v);
-  }
-
   const handleCreateDataClick = () => {
     const d = shuffle();
     render(d,getColors(d.length));
   }
 
-  const handleInsertSortClick = () => {
-    insertSort(arr, render);
+  const handleInsertSortClick = async () => {
+    setRunning(true);
+    await insertSort(arr, render);
+    setRunning(false);
   }
 
-  const handleMergeSortClick = () => {
-    mergeSort(arr, render);
+  const handleMergeSortClick = async () => {
+    setRunning(true);
+    await mergeSort(arr, render);
+    setRunning(false);
   }
 
-  const handleBubbleSortClick = () => {
-    bubbleSort(arr, render);
+  const handleBubbleSortClick = async () => {
+    setRunning(true);
+    await bubbleSort(arr, render);
+    setRunning(false);
   }
 
   return (
@@ -58,11 +63,10 @@ function App() {
         {bars}
       </div>
       <div>
-        <input value={fullCount} onChange={handleChange}/>
-        <button onClick={handleCreateDataClick}>Create Data</button>
-        <button onClick={handleInsertSortClick}>Insert Sort</button>
-        <button onClick={handleMergeSortClick}>Merge Sort</button>
-        <button onClick={handleBubbleSortClick}>Bubble Sort</button>
+        <button onClick={handleCreateDataClick} disabled={running}>Shuffle</button>
+        <button onClick={handleInsertSortClick} disabled={running}>Insert Sort</button>
+        <button onClick={handleMergeSortClick} disabled={running}>Merge Sort</button>
+        <button onClick={handleBubbleSortClick} disabled={running}>Bubble Sort</button>
       </div>
     </div>
   );
